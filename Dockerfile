@@ -24,3 +24,7 @@ RUN wget http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/ap
   tar -zxvf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
   rm apache-maven-$MAVEN_VERSION-bin.tar.gz && \
   mv apache-maven-$MAVEN_VERSION /usr/lib/mvn
+
+RUN wget http://149.202.181.9/sincerity-1.0beta13-0.noarch.tgz && \
+  tar -zxvf sincerity-1.0beta13-0.noarch.tgz --directory / && \
+  rm sincerity-1.0beta13-0.noarch.tgz
