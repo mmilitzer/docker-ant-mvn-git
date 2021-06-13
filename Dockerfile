@@ -9,6 +9,8 @@ LABEL name="Ant, Maven and Git Image on CentOS" \
 ARG MAVEN_VERSION=3.5.4
 ARG ANT_VERSION=1.9.9
 
+RUN localedef -i en_US -f UTF-8 en_US.UTF-8
+
 # Changing user to root to install maven
 USER root
 
