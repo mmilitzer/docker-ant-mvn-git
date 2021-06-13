@@ -45,5 +45,7 @@ RUN curl -fsSL https://storage.sbg.cloud.ovh.net/v1/AUTH_2f09a59f038d477ba0b6754
 # Again using non-root user i.e. stakater as set in base image
 USER 10001
 
+RUN git config --global user.name "Git Lab" && git config --global user.email "gitlab@xvid.com"
+
 # Define default command, can be overriden by passing an argument when running the container
 CMD ["mvn","-version"]
