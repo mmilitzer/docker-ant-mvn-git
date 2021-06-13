@@ -9,6 +9,8 @@ LABEL name="Ant, Maven and Git Image on CentOS" \
 ARG MAVEN_VERSION=3.5.4
 ARG ANT_VERSION=1.9.9
 
+ENV LANG C.UTF-8
+
 # Changing user to root to install maven
 USER root
 
@@ -23,20 +25,22 @@ RUN curl -fsSL https://archive.apache.org/dist/ant/binaries/apache-ant-$ANT_VERS
   && mv /usr/share/apache-ant-$ANT_VERSION /usr/share/ant \
   && ln -s /usr/share/ant/bin/ant /usr/bin/ant
 
-ENV ANT_VERSION=${ANT_VERSION}
-ENV ANT_HOME=/usr/share/ant
-ENV PATH=$ANT_HOME/bin:$PATH
+ENV ANT_VERSION ${ANT_VERSION}
+ENV ANT_HOME /usr/share/ant
+ENV PATH $ANT_HOME/bin:$PATH
 
 # Maven
 RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
   && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
-ENV MAVEN_VERSION=${MAVEN_VERSION}
+ENV MAVEN_VERSIONi ${MAVEN_VERSION}
 ENV M2_HOME /usr/share/maven
 ENV maven.home $M2_HOME
 ENV M2 $M2_HOME/bin
 ENV PATH $M2:$PATH
+
+ENV LANG C.UTF-8
 
 # Sincerity
 RUN curl -fsSL https://storage.sbg.cloud.ovh.net/v1/AUTH_2f09a59f038d477ba0b6754f757c5ac2/test/bzSS5rwgjn3aSwOEycwqih2UDZFvfSKiD/sincerity-1.0-beta13.rpm >./sincerity-1.0-beta13.rpm \
@@ -45,6 +49,7 @@ RUN curl -fsSL https://storage.sbg.cloud.ovh.net/v1/AUTH_2f09a59f038d477ba0b6754
 # Again using non-root user i.e. stakater as set in base image
 USER 10001
 
+ENV LANG C.UTF-8
 RUN git config --global user.name "Git Lab" && git config --global user.email "gitlab@xvid.com"
 
 # Define default command, can be overriden by passing an argument when running the container
