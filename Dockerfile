@@ -8,6 +8,8 @@ LABEL name="Ant, Maven and Git Image on CentOS" \
 # Setting Maven and Ant versions that needs to be installed
 ARG MAVEN_VERSION=3.5.4
 ARG ANT_VERSION=1.9.9
+ARG GIT_NAME=GitLab
+ARG GIT_EMAIL=gitlab@xvid.com
 
 # Changing user to root to install maven
 USER root
@@ -47,6 +49,11 @@ ENV PATH $M2:$PATH
 # Sincerity
 RUN curl -fsSL https://storage.sbg.cloud.ovh.net/v1/AUTH_2f09a59f038d477ba0b6754f757c5ac2/test/bzSS5rwgjn3aSwOEycwqih2UDZFvfSKiD/sincerity-1.0-beta13.rpm >./sincerity-1.0-beta13.rpm \
   && rpm -i sincerity-1.0-beta13.rpm && rm ./sincerity-1.0-beta13.rpm 
+
+ENV GIT_AUTHOR_NAME ${GIT_NAME}
+ENV GIT_AUTHOR_EMAIL ${GIT_EMAIL}
+ENV GIT_COMMITTER_NAME ${GIT_NAME}
+ENV GIT_COMMITTER_EMAIL ${GIT_EMAIL}
 
 # Again using non-root user i.e. stakater as set in base image
 USER 10001
