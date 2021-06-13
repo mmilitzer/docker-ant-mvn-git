@@ -1,7 +1,7 @@
 FROM webratio/ant
 
 RUN apt-get update -y && \
-    apt-get install -y git wget less openssh && \
+    apt-get install -y git wget less openssl openssh-server && \
     apt-get clean -y
 
 RUN apt-get install ca-certificates -y
