@@ -9,8 +9,6 @@ LABEL name="Ant, Maven and Git Image on CentOS" \
 ARG MAVEN_VERSION=3.5.4
 ARG ANT_VERSION=1.9.9
 
-RUN localedef -i en_US -f UTF-8 en_US.UTF-8
-
 # Changing user to root to install maven
 USER root
 
@@ -46,8 +44,6 @@ RUN curl -fsSL https://storage.sbg.cloud.ovh.net/v1/AUTH_2f09a59f038d477ba0b6754
 
 # Again using non-root user i.e. stakater as set in base image
 USER 10001
-
-RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 
 # Define default command, can be overriden by passing an argument when running the container
 CMD ["mvn","-version"]
