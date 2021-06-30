@@ -23,7 +23,7 @@ RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 # Install required tools
 # which: otherwise 'mvn version' prints '/usr/share/maven/bin/mvn: line 93: which: command not found'
 RUN yum update -y && \
-  yum install -y which wget git rpm glibc-locale-source && \
+  yum install -y which wget git rpm rpm-build glibc-locale-source && \
   yum clean all
 
 # Ant
