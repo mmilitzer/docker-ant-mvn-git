@@ -55,8 +55,10 @@ ENV GIT_AUTHOR_EMAIL ${GIT_EMAIL}
 ENV GIT_COMMITTER_NAME ${GIT_NAME}
 ENV GIT_COMMITTER_EMAIL ${GIT_EMAIL}
 
+RUN useradd -u 10002 -ms /bin/bash gitlab
+
 # Again using non-root user i.e. stakater as set in base image
-USER 10001
+USER 10002
 
 RUN git config --global user.name "Git Lab" && git config --global user.email "gitlab@xvid.com"
 
