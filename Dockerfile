@@ -47,8 +47,8 @@ ENV M2 $M2_HOME/bin
 ENV PATH $M2:$PATH
 
 # Sincerity
-RUN curl -fsSL https://storage.sbg.cloud.ovh.net/v1/AUTH_2f09a59f038d477ba0b6754f757c5ac2/test/bzSS5rwgjn3aSwOEycwqih2UDZFvfSKiD/sincerity-1.0-beta13.rpm >./sincerity-1.0-beta13.rpm \
-  && rpm -i sincerity-1.0-beta13.rpm && rm ./sincerity-1.0-beta13.rpm 
+RUN curl -fsSL https://storage.sbg.cloud.ovh.net/v1/AUTH_2f09a59f038d477ba0b6754f757c5ac2/test/bzSS5rwgjn3aSwOEycwqih2UDZFvfSKiD/sincerity-1.0-beta15.rpm >./sincerity-1.0-beta15.rpm \
+  && rpm -i sincerity-1.0-beta15.rpm && rm ./sincerity-1.0-beta15.rpm 
 
 ENV GIT_AUTHOR_NAME ${GIT_NAME}
 ENV GIT_AUTHOR_EMAIL ${GIT_EMAIL}
