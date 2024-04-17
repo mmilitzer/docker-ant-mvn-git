@@ -1,13 +1,13 @@
-FROM stakater/java-centos:7-1.8
+FROM almalinux/9-base:latest
 
-LABEL name="Ant, Maven and Git Image on CentOS" \    
+LABEL name="Ant, Maven and Git Image on AlmaLinux 9" \    
       vendor="Xvid" \
       release="1" \
-      summary="Ant, Maven and Git based image on CentOS" 
+      summary="Ant, Maven and Git based image on AlmaLinux 9" 
 
 # Setting Maven and Ant versions that needs to be installed
-ARG MAVEN_VERSION=3.5.4
-ARG ANT_VERSION=1.9.9
+ARG MAVEN_VERSION=3.6.3
+ARG ANT_VERSION=1.10.12
 ARG GIT_NAME=GitLab
 ARG GIT_EMAIL=gitlab@xvid.com
 
@@ -18,13 +18,20 @@ ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US.UTF-8
 ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF8
-RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 
 # Install required tools
 # which: otherwise 'mvn version' prints '/usr/share/maven/bin/mvn: line 93: which: command not found'
-RUN yum update -y && \
-  yum install -y which wget git rpm rpm-build openssh-clients glibc-locale-source && \
-  yum clean all
+RUN dnf update -y && \
+  dnf install -y which wget git libxcrypt-compat rpm libnsl rpm-build langpacks-en glibc-langpack-en glibc-langpack-de java-11-openjdk-devel openssh-clients glibc-locale-source rpmdevtools openssl-devel bzip2-devel libffi-devel && \
+  dnf group install -y "Development Tools" && \
+  dnf clean all
+
+RUN localedef -i en_US -f UTF-8 en_US.UTF-8
+
+# Python 2
+RUN cd /tmp && wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz && tar -xf Python-2.7.18.tar.xz \
+  && cd Python-2.7.18 && ./configure --enable-optimizations --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib" \
+  && make && make install
 
 # Ant
 RUN curl -fsSL https://archive.apache.org/dist/ant/binaries/apache-ant-$ANT_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
