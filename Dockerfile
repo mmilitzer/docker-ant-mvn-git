@@ -5,11 +5,15 @@ LABEL name="Ant, Maven and Git Image on AlmaLinux 9" \
       release="1" \
       summary="Ant, Maven and Git based image on AlmaLinux 9" 
 
-# Setting Maven and Ant versions that needs to be installed
+# Setting Maven, GraalVM and Ant versions that needs to be installed
 ARG MAVEN_VERSION=3.6.3
 ARG ANT_VERSION=1.10.12
 ARG GIT_NAME=GitLab
 ARG GIT_EMAIL=gitlab@xvid.com
+ARG GRAALVM_NODEJS_VERSION=24.2.2
+ARG GRAALVM_RPM_NAME=oracle-graalvm
+ARG GRAALVM_JDK_VERSION=21
+ARG GRAALVM_DIR_PATH=/opt/xvid
 
 # Changing user to root to install maven
 USER root
@@ -22,7 +26,7 @@ ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF8
 # Install required tools
 # which: otherwise 'mvn version' prints '/usr/share/maven/bin/mvn: line 93: which: command not found'
 RUN dnf update -y && \
-  dnf install -y which wget git libxcrypt-compat rpm libnsl rpm-build langpacks-en glibc-langpack-en glibc-langpack-de java-11-openjdk-devel openssh-clients glibc-locale-source rpmdevtools openssl-devel bzip2-devel libffi-devel && \
+  dnf install -y which wget tree git libxcrypt-compat rpm libnsl rpm-build langpacks-en glibc-langpack-en glibc-langpack-de openssh-clients glibc-locale-source rpmdevtools openssl-devel bzip2-devel libffi-devel && \
   dnf group install -y "Development Tools" && \
   dnf clean all
 
@@ -32,6 +36,17 @@ RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 RUN cd /tmp && wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz && tar -xf Python-2.7.18.tar.xz \
   && cd Python-2.7.18 && ./configure --enable-optimizations --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib" \
   && make && make install
+
+# GraalVM
+RUN mkdir -p ${GRAALVM_DIR_PATH} && curl -fL "https://download.oracle.com/graalvm/${GRAALVM_JDK_VERSION}/latest/graalvm-jdk-${GRAALVM_JDK_VERSION}_linux-x64_bin.tar.gz" -o /tmp/graalvm-jdk-${GRAALVM_JDK_VERSION}_linux-x64_bin.tar.gz \
+  && curl -fL "https://github.com/oracle/graaljs/releases/download/graal-${GRAALVM_NODEJS_VERSION}/graalnodejs-jvm-${GRAALVM_NODEJS_VERSION}-linux-amd64.tar.gz" -o /tmp/graalnodejs-jvm-${GRAALVM_NODEJS_VERSION}-linux-amd64.tar.gz \
+  && tar -C ${GRAALVM_DIR_PATH}/ -xzf /tmp/graalnodejs-jvm-${GRAALVM_NODEJS_VERSION}-linux-amd64.tar.gz \
+  && mv ${GRAALVM_DIR_PATH}/graal*-${GRAALVM_NODEJS_VERSION}* ${GRAALVM_DIR_PATH}/${GRAALVM_RPM_NAME} \
+  && rm -rf ${GRAALVM_DIR_PATH}/${GRAALVM_RPM_NAME}/jvm \
+  && tar -C ${GRAALVM_DIR_PATH}/ -xzf /tmp/graalvm-jdk-${GRAALVM_JDK_VERSION}_linux-x64_bin.tar.gz \
+  && mv ${GRAALVM_DIR_PATH}/graalvm-jdk* ${GRAALVM_DIR_PATH}/${GRAALVM_RPM_NAME}/jvm
+
+ENV PATH $GRAALVM_DIR_PATH/$GRAALVM_RPM_NAME/bin:$PATH
 
 # Ant
 RUN curl -fsSL https://archive.apache.org/dist/ant/binaries/apache-ant-$ANT_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
