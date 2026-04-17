@@ -44,9 +44,11 @@ RUN mkdir -p ${GRAALVM_DIR_PATH} && curl -fL "https://download.oracle.com/graalv
   && mv ${GRAALVM_DIR_PATH}/graal*-${GRAALVM_NODEJS_VERSION}* ${GRAALVM_DIR_PATH}/${GRAALVM_RPM_NAME} \
   && rm -rf ${GRAALVM_DIR_PATH}/${GRAALVM_RPM_NAME}/jvm \
   && tar -C ${GRAALVM_DIR_PATH}/ -xzf /tmp/graalvm-jdk-${GRAALVM_JDK_VERSION}_linux-x64_bin.tar.gz \
-  && mv ${GRAALVM_DIR_PATH}/graalvm-jdk* ${GRAALVM_DIR_PATH}/${GRAALVM_RPM_NAME}/jvm
+  && mv ${GRAALVM_DIR_PATH}/graalvm-jdk* ${GRAALVM_DIR_PATH}/${GRAALVM_RPM_NAME}/jvm \
+  && rm -rf /tmp/*
 
-ENV PATH $GRAALVM_DIR_PATH/$GRAALVM_RPM_NAME/bin:$PATH
+ENV PATH $GRAALVM_DIR_PATH/$GRAALVM_RPM_NAME/bin:${GRAALVM_DIR_PATH}/${GRAALVM_RPM_NAME}/jvm/bin:$PATH
+ENV JAVA_HOME ${GRAALVM_DIR_PATH}/${GRAALVM_RPM_NAME}/jvm
 
 # Ant
 RUN curl -fsSL https://archive.apache.org/dist/ant/binaries/apache-ant-$ANT_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
